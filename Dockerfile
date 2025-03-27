@@ -14,4 +14,4 @@ FROM nginx:alpine
 # Copy the built application to nginx's html directory
 COPY --from=build /app/dist/car-management/browser /usr/share/nginx/html
 # Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY src/nginx.conf /etc/nginx/conf.d/default.conf
