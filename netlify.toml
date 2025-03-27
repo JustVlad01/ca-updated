@@ -4,3 +4,9 @@
   
 [build.environment]
   NODE_VERSION = "21"
+
+# The following redirect is necessary for Angular routing to work properly
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
