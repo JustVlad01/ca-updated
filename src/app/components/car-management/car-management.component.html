@@ -196,7 +196,16 @@
                     <div class="car-actions">
                       <button *ngIf="isAdmin()" class="btn-edit" (click)="editCar(car)">Edit</button>
                       <button *ngIf="isAdmin()" class="btn-delete" (click)="deleteCar(car._id || '')">Delete</button>
-                      <span *ngIf="!isAdmin()" class="view-only">View only</span>
+                      
+                      <!-- Like/Unlike Button -->
+                      <button 
+                        class="btn-like" 
+                        [class.liked]="isCarLiked(car._id || '')"
+                        (click)="isCarLiked(car._id || '') ? unlikeCar(car._id || '') : likeCar(car._id || '')"
+                      >
+                        <span class="heart-icon">{{ isCarLiked(car._id || '') ? '❤️' : '🤍' }}</span>
+                        {{ isCarLiked(car._id || '') ? 'Unlike' : 'Like' }}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -242,7 +251,16 @@
                       <div class="car-actions">
                         <button *ngIf="isAdmin()" class="btn-edit" (click)="editCar(car)">Edit</button>
                         <button *ngIf="isAdmin()" class="btn-delete" (click)="deleteCar(car._id || '')">Delete</button>
-                        <span *ngIf="!isAdmin()" class="view-only">View only</span>
+                        
+                        <!-- Like/Unlike Button -->
+                        <button 
+                          class="btn-like" 
+                          [class.liked]="isCarLiked(car._id || '')"
+                          (click)="isCarLiked(car._id || '') ? unlikeCar(car._id || '') : likeCar(car._id || '')"
+                        >
+                          <span class="heart-icon">{{ isCarLiked(car._id || '') ? '❤️' : '🤍' }}</span>
+                          {{ isCarLiked(car._id || '') ? 'Unlike' : 'Like' }}
+                        </button>
                       </div>
                     </div>
                   </div>

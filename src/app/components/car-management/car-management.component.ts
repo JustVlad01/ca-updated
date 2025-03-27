@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CarService, Car } from '../../services/car.service';
+import { UserService } from '../../services/user.service';
 import { catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../auth.service';
@@ -46,10 +47,14 @@ export class CarManagementComponent implements OnInit {
   selectedCategory: string = 'all';
   categorizedCars: { [category: string]: Car[] } = {};
 
+  // Liked cars
+  likedCars: string[] = [];
+
   constructor(
     private fb: FormBuilder, 
     private carService: CarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     this.carForm = this.fb.group({
       brand: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
@@ -62,6 +67,52 @@ export class CarManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCars();
+    this.loadLikedCars();
+  }
+
+  // Load liked cars
+  loadLikedCars(): void {
+    this.userService.getLikedCars().subscribe({
+      next: (cars) => {
+        this.likedCars = cars.map(car => car._id || '').filter(id => id !== '');
+      },
+      error: (err) => {
+        console.error('Error loading liked cars:', err);
+      }
+    });
+  }
+
+  // Like a car
+  likeCar(carId: string): void {
+    this.userService.likeCar(carId).subscribe({
+      next: (response) => {
+        // Add the car to the liked cars list
+        if (!this.likedCars.includes(carId)) {
+          this.likedCars.push(carId);
+        }
+      },
+      error: (err) => {
+        console.error('Error liking car:', err);
+      }
+    });
+  }
+
+  // Unlike a car
+  unlikeCar(carId: string): void {
+    this.userService.unlikeCar(carId).subscribe({
+      next: () => {
+        // Remove the car from the liked cars list
+        this.likedCars = this.likedCars.filter(id => id !== carId);
+      },
+      error: (err) => {
+        console.error('Error unliking car:', err);
+      }
+    });
+  }
+
+  // Check if a car is liked
+  isCarLiked(carId: string): boolean {
+    return this.likedCars.includes(carId);
   }
 
   loadCars(params: { sortBy?: string; order?: string } = {}): void {

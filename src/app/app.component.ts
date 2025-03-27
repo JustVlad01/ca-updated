@@ -9,30 +9,30 @@ import { AuthService } from './auth.service';
   imports: [RouterModule, CommonModule],
   template: `
     <div class="navbar">
-      <div class="navbar-left">
-        
-        <div class="navbar-subtitle">Car Management Warehouse</div>
+      <div class="navbar-brand">
+        <div class="navbar-title">Car Management Warehouse</div>
       </div>
-      <div class="navbar-links" *ngIf="isLoggedIn()">
+      
+      <div class="navbar-center" *ngIf="isLoggedIn()">
         <a [routerLink]="['/cars']" class="nav-link">Cars</a>
+        <a [routerLink]="['/liked-cars']" class="nav-link">Liked Cars</a>
         <a *ngIf="isAdmin()" [routerLink]="['/users']" class="nav-link">Users</a>
       </div>
-      <div class="navbar-user" *ngIf="isLoggedIn()">
-        <span class="user-role" [ngClass]="{'admin-role': isAdmin(), 'user-role': !isAdmin()}">
-          {{ isAdmin() ? 'Administrator' : 'User' }}
-        </span>
-        <div class="user-permissions">
-          <ng-container *ngIf="isAdmin()">
-            <span>Full access</span>
-          </ng-container>
-          <ng-container *ngIf="isUser()">
-            <span>Limited access</span>
-          </ng-container>
+      
+      <div class="navbar-right">
+        <div class="user-info" *ngIf="isLoggedIn()">
+          <span class="user-role" [ngClass]="{'admin-role': isAdmin(), 'user-role': !isAdmin()}">
+            {{ isAdmin() ? 'Administrator' : 'User' }}
+          </span>
+          <span class="user-permissions">
+            {{ isAdmin() ? 'Full access' : 'Limited access' }}
+          </span>
         </div>
-      </div>
-      <div class="navbar-actions">
-        <button *ngIf="!isLoggedIn()" (click)="navigateToLogin()" class="login-btn">Login</button>
-        <button *ngIf="isLoggedIn()" (click)="logout()" class="logout-btn">Logout</button>
+        
+        <div class="navbar-actions">
+          <button *ngIf="!isLoggedIn()" (click)="navigateToLogin()" class="login-btn">Login</button>
+          <button *ngIf="isLoggedIn()" (click)="logout()" class="logout-btn">Logout</button>
+        </div>
       </div>
     </div>
     <router-outlet></router-outlet>
@@ -44,98 +44,138 @@ import { AuthService } from './auth.service';
       align-items: center;
       background-color: #343a40;
       color: white;
-      padding: 15px 20px;
+      padding: 10px 20px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: 60px;
     }
-    .navbar-left {
+    
+    /* Left section - Brand */
+    .navbar-brand {
       display: flex;
-      flex-direction: column;
+      align-items: center;
     }
+    
     .navbar-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .navbar-subtitle {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      margin-top: 5px;
+      color: white;
     }
-    .navbar-links {
+    
+    /* Center section - Navigation links */
+    .navbar-center {
       display: flex;
       gap: 20px;
+      align-items: center;
+      justify-content: center;
     }
+    
     .nav-link {
       color: white;
       text-decoration: none;
-      font-weight: bold;
-      padding: 5px 10px;
+      font-weight: 500;
+      padding: 6px 12px;
       border-radius: 4px;
-      transition: background-color 0.3s;
+      transition: all 0.2s ease;
     }
+    
     .nav-link:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
     }
-    .navbar-user {
+    
+    /* Right section - User info and actions */
+    .navbar-right {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
+      gap: 15px;
     }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .user-role {
       display: inline-block;
-      padding: 0.5rem 1rem;
+      padding: 5px 12px;
       border-radius: 50px;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
+    
     .admin-role {
       background-color: #28a745;
       color: white;
     }
+    
     .user-role {
       background-color: #007bff;
       color: white;
     }
+    
     .user-permissions {
-      margin-top: 0.25rem;
       font-size: 0.8rem;
       color: rgba(255, 255, 255, 0.8);
+      margin-left: 5px;
     }
+    
     .navbar-actions {
       display: flex;
-      gap: 10px;
-      margin-left: 15px;
+      align-items: center;
     }
+    
     .login-btn, .logout-btn {
-      padding: 8px 16px;
+      padding: 6px 16px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      font-weight: 500;
+      transition: all 0.2s ease;
     }
+    
     .login-btn {
       background-color: #4CAF50;
       color: white;
     }
+    
     .logout-btn {
       background-color: #f44336;
       color: white;
     }
+    
     .login-btn:hover, .logout-btn:hover {
       opacity: 0.9;
+      transform: translateY(-2px);
     }
+    
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .navbar {
         flex-direction: column;
-        padding: 10px;
+        height: auto;
+        padding: 15px;
       }
-      .navbar-left, .navbar-links, .navbar-user, .navbar-actions {
-        margin: 5px 0;
+      
+      .navbar-brand, .navbar-center, .navbar-right {
         width: 100%;
+        margin-bottom: 10px;
         justify-content: center;
       }
-      .navbar-user {
+      
+      .navbar-right {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .user-info {
+        flex-direction: column;
         align-items: center;
+      }
+      
+      .user-permissions {
+        margin-left: 0;
+        margin-top: 5px;
       }
     }
   `],

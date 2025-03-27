@@ -63,6 +63,33 @@ export class CarService {
   refreshImageUrl(s3Key: string): Observable<any> {
     return this.http.get(`${this.uploadUrl}/refresh?key=${s3Key}`);
   }
+  
+  // Preload and refresh all image URLs in a list of cars
+  preloadAndRefreshImages(cars: Car[]): void {
+    cars.forEach(car => {
+      if (car.imageUrl && car.imageUrl.includes('s3')) {
+        // Extract the s3Key from the URL if available
+        const s3KeyMatch = car.imageUrl.match(/car-images\/[^?]+/);
+        if (s3KeyMatch && s3KeyMatch[0]) {
+          const s3Key = s3KeyMatch[0];
+          // Refresh the signed URL
+          this.refreshImageUrl(s3Key).subscribe(
+            response => {
+              if (response && response.imageUrl) {
+                car.imageUrl = response.imageUrl;
+                // Preload the image
+                const img = new Image();
+                img.src = response.imageUrl;
+              }
+            },
+            error => {
+              console.error('Failed to refresh image URL:', error);
+            }
+          );
+        }
+      }
+    });
+  }
 
   createCar(car: Car, imageFile?: File): Observable<Car> {
     // If there's no image file, just create the car

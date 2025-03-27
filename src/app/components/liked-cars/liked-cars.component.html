@@ -1,0 +1,66 @@
+<div class="liked-cars-container">
+  <div class="container main-content">
+    <h1 class="page-title">Liked Cars</h1>
+    
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading your liked cars...</p>
+    </div>
+    
+    <!-- Error state -->
+    <div *ngIf="error && !loading" class="error-state">
+      <p class="error-message">{{ error }}</p>
+      <button class="retry-button" (click)="loadLikedCars()">Try Again</button>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="!loading && !error && likedCars.length === 0" class="empty-state">
+      <div class="empty-icon">❤️</div>
+      <h2>No Liked Cars Yet</h2>
+      <p>You haven't liked any cars yet. Browse the cars and click the heart icon to add them to your liked cars.</p>
+      <a [routerLink]="['/cars']" class="browse-cars-btn">Browse Cars</a>
+    </div>
+    
+    <!-- Liked cars display -->
+    <div *ngIf="!loading && !error && likedCars.length > 0" class="liked-cars-grid" @fadeIn>
+      <div class="car-item" *ngFor="let car of likedCars">
+        <div class="car-card">
+          <div class="car-image">
+            <img 
+              *ngIf="car.imageUrl" 
+              [src]="car.imageUrl" 
+              alt="{{ car.brand }} {{ car.model }}"
+              (error)="handleImageError(car)"
+            >
+            <div *ngIf="!car.imageUrl" class="no-image">
+              <span>No Image Available</span>
+            </div>
+          </div>
+          <div class="car-info">
+            <h3 class="car-title">{{ car.brand }} {{ car.model }}</h3>
+            <div class="car-details">
+              <div class="detail-item">
+                <span class="detail-label">Year</span>
+                <span class="detail-value">{{ car.year }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Mileage</span>
+                <span class="detail-value">{{ car.mileage }}</span>
+              </div>
+              <div class="detail-item price">
+                <span class="detail-label">Price</span>
+                <span class="detail-value">{{ car.price | currency: 'EUR':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="car-actions">
+            <button class="btn-unlike" (click)="unlikeCar(car._id || '')">
+              <span class="heart-icon">❤️</span> Unlike
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
