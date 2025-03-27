@@ -4,7 +4,7 @@ EXPOSE 80
 # Create working directory if it doesn't exist
 WORKDIR /app
 # Copy all files from parent directory to workdir
-COPY .. .
+COPY . .
 # Install node libraries
 RUN npm install
 # Build the application

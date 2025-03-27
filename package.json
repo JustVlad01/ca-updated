@@ -2,16 +2,13 @@
   "name": "car-management",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:car-management": "node dist/car-management/server/server.mjs",
-    "dev:ssr": "ng serve:ssr",
-    "build:ssr": "ng build && ng run car-management:server",
-    "serve:ssr": "node dist/car-management/server/main.js"
-  },
+  "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build",
+  "build:ssr": "ng build && ng run car-management:server",
+  "dev:ssr": "ng serve:ssr",
+  "serve:ssr": "node dist/car-management/server/main.js"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.0.0",
@@ -38,6 +35,7 @@
     "@angular-devkit/build-angular": "^19.0.0",
     "@angular/cli": "^19.0.0",
     "@angular/compiler-cli": "^19.0.0",
+    "@netlify/angular-runtime": "^2.3.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
